@@ -10,12 +10,13 @@ class ArithmeticView extends StatefulWidget {
 class _ArithmeticViewState extends State<ArithmeticView> {
   int first = 0;
   int second = 0;
-  int result = 0;
+  String result = "0"; // Changed to String to display division result properly
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Arithemtic'),
+        title: const Text('Arithmetic'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -23,7 +24,7 @@ class _ArithmeticViewState extends State<ArithmeticView> {
           children: [
             TextField(
               onChanged: (value) {
-                first = int.parse(value);
+                first = int.tryParse(value) ?? 0; // Safely parse integer
               },
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
@@ -31,12 +32,10 @@ class _ArithmeticViewState extends State<ArithmeticView> {
                 labelText: 'Enter First No',
               ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
             TextField(
               onChanged: (value) {
-                second = int.parse(value);
+                second = int.tryParse(value) ?? 0;
               },
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
@@ -44,41 +43,64 @@ class _ArithmeticViewState extends State<ArithmeticView> {
                 labelText: 'Enter Second No',
               ),
             ),
-            const SizedBox(
-              height: 8,
+            const SizedBox(height: 8),
+            Text(
+              'Result : $result',
+              style: const TextStyle(
+                fontSize: 20,
+              ),
             ),
-            Text('Result : $result',
-                style: const TextStyle(
-                  fontSize: 20,
-                )),
-            const SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // State lai change gara
-                  // buil method ma feri jau ani refresh gara
                   setState(() {
-                    result = first + second;
+                    result = (first + second).toString();
                   });
                 },
                 child: const Text('Addition'),
               ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    result = first - second;
+                    result = (first - second).toString();
                   });
                 },
                 child: const Text('Subtraction'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    result = (first * second).toString();
+                  });
+                },
+                child: const Text('Multiplication'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    if (second != 0) {
+                      result = (first / second).toStringAsFixed(
+                          2); // Limit result to 2 decimal places
+                    } else {
+                      result = "Cannot divide by zero";
+                    }
+                  });
+                },
+                child: const Text('Division'),
               ),
             ),
           ],
